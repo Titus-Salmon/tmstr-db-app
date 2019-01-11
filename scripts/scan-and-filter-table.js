@@ -13,7 +13,11 @@ app.get('/', (request, response) => response.sendFile(`${path.join(__dirname, '.
 app.post('/api/data', (request, response) => {
     const postBody = request.body;
 
-    console.log(Object.values(postBody)[0]);
+    console.log(postBody);
+    console.log(postBody["lname"]);
+    console.log(postBody["fname"]);
+
+    //console.log(Object.values(postBody)[0]);
 
     /**scan and filter table******************************************************************************** */
     var AWS = require('aws-sdk');
@@ -23,27 +27,99 @@ app.post('/api/data', (request, response) => {
         accessKeyId: 'DEFAULT_ACCESS_KEY', // needed if you don't have aws credentials at all in env
         secretAccessKey: 'DEFAULT_SECRET' // needed if you don't have aws credentials at all in env
     });
+/*
+    for (n = 0; n < 2; n++) {
+        if (Object.values(postBody)[n] == null) {
+            return ;
+        } else {
+            scanFilter();
+        }
+    }
+*/
+/*
 
-    var params = {
-        TableName: 'teamster-application-database',/* required */
-        ExpressionAttributeNames: {
-            "#lname": "lname"
-        },
-        ExpressionAttributeValues: {
-            ":lname": {
-                S: Object.values(postBody)[0]
-            }
-        },
-        FilterExpression: "#lname = :lname"
-    };
+var obj = {
+    key1: value1,
+    key2: value2
+};
 
-    dyn.scan(params, function (err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        //else console.log(data); // successful response --logs entire data object
-        console.log(data.Items);
-    });
-    /**scan and filter table******************************************************************************** */
+var getProperty = function (propertyName) {
+    return obj[propertyName];
+};
 
+obj["key3"] = "value3";
+
+getProperty("key1");
+getProperty("key2");
+getProperty("key3");
+*/
+
+/*
+
+var obj = {
+    key1: value1,
+    key2: value2
+};
+
+var getProperty = function (propertyName) {
+    return obj[propertyName];
+};
+
+obj["key3"] = "value3";
+
+getProperty("key1");
+getProperty("key2");
+getProperty("key3");
+*/
+
+/*
+params["ExpressionAttributeNames"] = {}
+*/
+    {
+        var params = {
+            TableName: 'teamster-application-database',
+            /* required */
+            ExpressionAttributeNames: {
+                "#last_name": Object.keys(postBody)[0], //lname
+                "#first_name": Object.keys(postBody)[1] //fname
+            },
+            ExpressionAttributeValues: {
+                ":lname": {
+                    "S": Object.values(postBody)[0] //Smith
+                },
+                ":fname": {
+                    "S": Object.values(postBody)[1] //John
+                },
+            },
+            FilterExpression: "#last_name = :lname AND #first_name = :fname" // lname: { S: 'Smith' }
+        }; 
+
+        console.log(postBody); //{ lname: 'Smith', fname: 'John' }
+
+        console.log(Object.keys(postBody)[0]); //lname
+        console.log(Object.keys(postBody)[1]); //fname
+        console.log(Object.values(postBody)[0]); //Smith
+        console.log(Object.values(postBody)[1]); //John
+
+        console.log(params["ExpressionAttributeValues"][":lname"]); //{ S: 'Smith' }
+        console.log(params["ExpressionAttributeValues"][":fname"]); //{ S: 'John' }
+        console.log(params["ExpressionAttributeValues"]); //{ ':lname': { S: 'Smith' }, ':fname': { S: 'John' } }
+        //to add something to params["ExpressionAttributeValues"] -- params["ExpressionAttributeValues"][":lname"] = {"S": Object.values(postBody)[0]}
+        //thus, if (postBody["lname"] !== void) { params["ExpressionAttributeValues"][":lname"] = {"S": Object.values(postBody)[0]} }
+
+        console.log(params["ExpressionAttributeNames"]["#last_name"]); //lname
+        console.log(params["ExpressionAttributeNames"]["#first_name"]); //fname
+        console.log(params["ExpressionAttributeNames"]); //{ '#last_name': 'lname', '#first_name': 'fname' }
+        console.log(params); //{ '#last_name': 'lname', '#first_name': 'fname' }
+
+
+        dyn.scan(params, function (err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            //else console.log(data); // successful response --logs entire data object
+            console.log(data.Items);
+        });
+        /**scan and table******************************************************************************** */
+    }
 });
 
 
