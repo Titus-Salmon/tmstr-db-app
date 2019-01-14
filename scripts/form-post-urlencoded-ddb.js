@@ -10,6 +10,7 @@ app.get('/', (request, response) => response.sendFile(`${path.join(__dirname, '.
 
 app.post('/api/data', (request, response) => {
     const postBody = request.body;
+    console.log(postBody);
 
     //the following puts 'postBody' json into dynamodb database/////////////////////////////////////////
     //can/should this be made more modular? <--maybe not...
@@ -93,7 +94,7 @@ app.post('/api/data', (request, response) => {
             },
 
             ssn: { //'ssn' is primary key for 'teamster-application-database' table; must always be included in 'putItem' method
-                'S': Object.values(postBody)[0][20] //todo: change 'putToDB[20]' to form data input from client-side for 'social security' field
+                'S': Object.values(postBody)[0][20]
             },
         }
     };
@@ -107,6 +108,11 @@ app.post('/api/data', (request, response) => {
     for (n = 0; n < 23; n++) {
         console.log(Object.values(postBody)[0][n]);
     }
+
+    console.log(postBody);
+    console.log(Object.values(postBody)[0]);
+    
+
 });
 
 app.listen(3000, () => console.info('Application running on port 3000'));
