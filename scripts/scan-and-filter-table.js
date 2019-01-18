@@ -5,15 +5,33 @@ const app = express();
 const path = require('path'); //node module that provides utilities for working with file and directory paths
 
 
+app.set('views', '../views-t0d');
+app.set('view engine', 'pug');
+
 app.use(bodyParser.urlencoded({ //bodyParser = middleware
     extended: false
 }));
 
-app.get('/', (request, response) => response.sendFile(`${path.join(__dirname, '../scan-filter.html')}`)); //(__dirname, '../) goes one folder up from current location 
+
+//try to wrap app.get in function that figures out if 
+app.get('/', (request, response) => response.sendFile(`${path.join(__dirname, '../scan-filter.html')}`, function () {
+    console.log('you can have a function here');
+})); //(__dirname, '../) goes one folder up from current location 
 //response.sendFile() sends the file ('scan-filter.html') to THIS file (scan-and-filter-table.js), thus we are able to see the
 //scan-filter.html page in our browser when running scan-and-filter-table.js from command line (presumably)
+//res.sendFile(path [, options] [, fn])
 
-app.post('/api/data', (request, response) => {
+app.post('/scanResults', (request, response) => { //request takes POST data from client form
+    //then I take this data, and scan the database
+    //then I generate scan results
+    //response sends the scan results back to client-side
+    //I need to return these results client-side on the same page they searched from
+
+
+    //response.header('Access-Control-Allow-Origin', '*');
+    //response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+    //response.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
     const postBody = request.body;
 
     console.log(postBody);
@@ -36,7 +54,7 @@ app.post('/api/data', (request, response) => {
     var lname_exp;
     var fname_exp;
 
-   
+
     if (postBody["lname"] !== '') { //if data input in html form not empty, push string for FilterExpression to filterExpArray
         lname_exp = "#last_name = :lname";
         filterExpArray.push(lname_exp);
@@ -123,7 +141,12 @@ app.post('/api/data', (request, response) => {
             if (err) console.log(err, err.stack); // an error occurred
             //else console.log(data); // successful response --logs entire data object
             console.log(data.Items);
-            response.send(data.Items); //sends results of scan & filter back to client (scan-filter.html)
+            //var searchResults = data.Items;
+            //console.log('search results = '+Object.entries(searchResults));
+           // module.exports = searchResults;
+            //response.send(data.Items); //sends results of scan & filter back to client (scan-filter.html)
+            //response.render('search-results.pug');
+            //response.json(data.Items);
         });
         /**scan and filter table******************************************************************************** */
     }
