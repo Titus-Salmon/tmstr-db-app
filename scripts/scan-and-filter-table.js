@@ -4,8 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const path = require('path'); //node module that provides utilities for working with file and directory paths
 
-const fs = require('fs');
-
 
 app.set('views', '../views-t0d');
 app.set('view engine', 'pug');
@@ -15,7 +13,7 @@ app.use(bodyParser.urlencoded({ //bodyParser = middleware
 }));
 
 
-//try to wrap app.get in function that figures out if 
+//try to wrap app.get in function that figures out if
 app.get('/', (request, response) => response.sendFile(`${path.join(__dirname, '../scan-filter.html')}`, function () {
     console.log('you can have a function here');
 })); //(__dirname, '../) goes one folder up from current location 
@@ -142,28 +140,9 @@ app.post('/scanResults', (request, response) => { //request takes POST data from
         dyn.scan(params, function (err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             //else console.log(data); // successful response --logs entire data object
-            //console.log(data.Items);
-
-           // const fs = require('fs')
-
-           // const content = 'Some content!'
-           
-            fs.writeFile('../scan-data.txt', data.Items, (err) => {
-                if (err) {
-                    console.error(err)
-                    return
-                }
-                //file written successfully
-                //console.log('data.Items = ' + data.Items);
-                console.log(data.Items);
-            });
-
-
-            //var searchResults = data.Items;
-            //console.log('search results = '+Object.entries(searchResults));
-            //module.exports = data.Items;
-            //response.send(data.Items); //sends results of scan & filter back to client (scan-filter.html)
-            //response.render('search-results.pug');
+            console.log(data.Items);
+            response.send(data); //sends results of scan & filter back to client (scan-filter.html)
+            //response.render('scan-filter.pug');
             //response.json(data.Items);
         });
         /**scan and filter table******************************************************************************** */

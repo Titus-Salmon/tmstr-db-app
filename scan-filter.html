@@ -16,7 +16,7 @@
   <form action="/scanResults" method="POST" id="search-form">
     <!--The action attribute specifies where to send the form-data when a form is submitted.-->
     Last name: <input type="text" name="lname" id="last-name"> First name: <input type="text" name="fname" id="first-name">
-    <button type="submit" onclick="showScanResults()">Send</button>
+    <button type="button" onclick="showScanResults()">Send</button>
   </form>
 
 
@@ -24,9 +24,14 @@
     <p>results should go here</p>
   </div>
 
+  <div id="l_name">
+  </div>
 
-<script>
-    function showScanResults() {
+
+  <script>
+
+
+/*
       var ajaxCall = new XMLHttpRequest();
       ajaxCall.onreadystatechange = function () {
         if (ajaxCall.readyState == 4 && ajaxCall.status == 200) {
@@ -34,14 +39,37 @@
           document.getElementById("results").innerHTML = ajaxCall.responseText;
         }
       };
+
       ajaxCall.open("GET", "http://localhost:80/teamster-nodejs/scan-data.txt", true);
       ajaxCall.send();
+*/
+
+
+    function showScanResults() {
+      var ajaxCall = new XMLHttpRequest();
+
+      ajaxCall.onreadystatechange = function () {
+        if (ajaxCall.readyState == 4 && ajaxCall.status == 200) {
+          console.log('ajaxCall = ' + ajaxCall);
+
+
+          //xmlDoc = ajaxCall.responseXML;
+          //lastName = xmlDoc.getElementsByTagName("last-name");
+          //document.getElementById("l_name").innerHTML = lastName;
+
+          document.getElementById("results").innerHTML = ajaxCall.responseText;
+        }
+      };
+      ajaxCall.open("POST", "/scanResults", true);
+      ajaxCall.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      ajaxCall.send("lname=Smith&fname=John");
       //ajaxCall.responseText;
     }
+    
   </script>
-  
 
-  
+
+
 
 </body>
 
