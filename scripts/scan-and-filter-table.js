@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const path = require('path'); //node module that provides utilities for working with file and directory paths
 
+const fs = require('fs');
+
 
 app.set('views', '../views-t0d');
 app.set('view engine', 'pug');
@@ -140,10 +142,26 @@ app.post('/scanResults', (request, response) => { //request takes POST data from
         dyn.scan(params, function (err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             //else console.log(data); // successful response --logs entire data object
-            console.log(data.Items);
+            //console.log(data.Items);
+
+           // const fs = require('fs')
+
+           // const content = 'Some content!'
+           
+            fs.writeFile('../scan-data.txt', data.Items, (err) => {
+                if (err) {
+                    console.error(err)
+                    return
+                }
+                //file written successfully
+                //console.log('data.Items = ' + data.Items);
+                console.log(data.Items);
+            });
+
+
             //var searchResults = data.Items;
             //console.log('search results = '+Object.entries(searchResults));
-           // module.exports = searchResults;
+            //module.exports = data.Items;
             //response.send(data.Items); //sends results of scan & filter back to client (scan-filter.html)
             //response.render('search-results.pug');
             //response.json(data.Items);

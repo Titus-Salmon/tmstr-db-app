@@ -16,7 +16,7 @@
   <form action="/scanResults" method="POST" id="search-form">
     <!--The action attribute specifies where to send the form-data when a form is submitted.-->
     Last name: <input type="text" name="lname" id="last-name"> First name: <input type="text" name="fname" id="first-name">
-    <button type="submit">Send</button>
+    <button type="submit" onclick="showScanResults()">Send</button>
   </form>
 
 
@@ -24,23 +24,23 @@
     <p>results should go here</p>
   </div>
 
-<!--
+
 <script>
     function showScanResults() {
-      var ajaxTest = new XMLHttpRequest();
-      ajaxTest.onreadystatechange = function () {
-        if (ajaxTest.readyState == 4 && ajaxTest.status == 200) {
-          console.log('ajaxTest = '+ajaxTest);
-          document.getElementById("results").innerHTML = ajaxTest.responseText;
+      var ajaxCall = new XMLHttpRequest();
+      ajaxCall.onreadystatechange = function () {
+        if (ajaxCall.readyState == 4 && ajaxCall.status == 200) {
+          console.log('ajaxCall = '+ajaxCall);
+          document.getElementById("results").innerHTML = ajaxCall.responseText;
         }
       };
-      ajaxTest.open("GET", "/", true);
-      ajaxTest.send();
-      //ajaxTest.responseText;
+      ajaxCall.open("GET", "http://localhost:80/teamster-nodejs/scan-data.txt", true);
+      ajaxCall.send();
+      //ajaxCall.responseText;
     }
   </script>
   
--->
+
   
 
 </body>
